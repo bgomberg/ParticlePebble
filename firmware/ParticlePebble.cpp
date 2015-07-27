@@ -3,16 +3,17 @@
  */
 
 #include "ParticlePebble.h"
-#include "board.h"
+//#include "board.h"
 extern "C" {
 #include "PebbleSerial.h"
 };
 
-static HardwareSerial *s_serial = &(BOARD_SERIAL);
+//static HardwareSerial *s_serial = &(BOARD_SERIAL);
 static uint8_t *s_buffer;
 static size_t s_buffer_length;
 
 static void prv_control_cb(PebbleControl cmd) {
+#if 0
   switch (cmd) {
   case PebbleControlEnableTX:
     board_set_tx_enabled(true);
@@ -33,16 +34,19 @@ static void prv_control_cb(PebbleControl cmd) {
   default:
     break;
   }
+#endif
 }
 
 static void prv_write_byte_cb(uint8_t data) {
+#if 0
   s_serial->write(data);
+#endif
 }
 
 void ParticlePebble::begin(uint8_t *buffer, size_t length) {
   s_buffer = buffer;
   s_buffer_length = length;
-
+#if 0
   s_serial->begin(PEBBLE_DEFAULT_BAUDRATE);
 
   PebbleCallbacks callbacks = {
@@ -51,6 +55,7 @@ void ParticlePebble::begin(uint8_t *buffer, size_t length) {
   };
   pebble_init(callbacks);
   pebble_prepare_for_read(s_buffer, s_buffer_length);
+#endif
 }
 
 bool ParticlePebble::feed(size_t *length, bool *is_read) {
