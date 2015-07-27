@@ -1,7 +1,7 @@
 {
   "name": "ParticlePebble",
   "author": "bgomberg",
-  "license": "MIT",
+  "license": "ARR",
   "version": "1.0.0",
   "description": "Pebble protocol for Particle Photon."
 }
