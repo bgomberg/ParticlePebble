@@ -4,8 +4,6 @@
 #ifndef __ARDUINO_PEBBLE_SERIAL_H__
 #define __ARDUINO_PEBBLE_SERIAL_H__
 
-#include <Arduino.h>
-
 class ArduinoPebbleSerial {
 public:
   static void begin(uint8_t *buffer, size_t length);
