@@ -3,9 +3,9 @@
  */
 
 #include "ParticlePebble.h"
-#include "utility/board.h"
+#include "board.h"
 extern "C" {
-#include "utility/PebbleSerial.h"
+#include "PebbleSerial.h"
 };
 
 static HardwareSerial *s_serial = &(BOARD_SERIAL);
