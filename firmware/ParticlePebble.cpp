@@ -2,7 +2,7 @@
  * This is an Arduino library wrapper around the PebbleSerial library.
  */
 
-#include "ArduinoPebbleSerial.h"
+#include "ParticlePebble.h"
 #include "utility/board.h"
 extern "C" {
 #include "utility/PebbleSerial.h"
@@ -39,7 +39,7 @@ static void prv_write_byte_cb(uint8_t data) {
   s_serial->write(data);
 }
 
-void ArduinoPebbleSerial::begin(uint8_t *buffer, size_t length) {
+void ParticlePebble::begin(uint8_t *buffer, size_t length) {
   s_buffer = buffer;
   s_buffer_length = length;
 
@@ -53,7 +53,7 @@ void ArduinoPebbleSerial::begin(uint8_t *buffer, size_t length) {
   pebble_prepare_for_read(s_buffer, s_buffer_length);
 }
 
-bool ArduinoPebbleSerial::feed(size_t *length, bool *is_read) {
+bool ParticlePebble::feed(size_t *length, bool *is_read) {
   while (s_serial->available()) {
     uint8_t data = (uint8_t)s_serial->read();
     if (pebble_handle_byte(data, length, is_read)) {
@@ -65,14 +65,14 @@ bool ArduinoPebbleSerial::feed(size_t *length, bool *is_read) {
   return false;
 }
 
-bool ArduinoPebbleSerial::write(const uint8_t *payload, size_t length) {
+bool ParticlePebble::write(const uint8_t *payload, size_t length) {
   return pebble_write(payload, length);
 }
 
-void ArduinoPebbleSerial::notify(void) {
+void ParticlePebble::notify(void) {
   pebble_notify();
 }
 
-bool ArduinoPebbleSerial::is_connected(void) {
+bool ParticlePebble::is_connected(void) {
   return pebble_is_connected();
 }

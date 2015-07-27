@@ -4,7 +4,7 @@
 #ifndef __ARDUINO_PEBBLE_SERIAL_H__
 #define __ARDUINO_PEBBLE_SERIAL_H__
 
-class ArduinoPebbleSerial {
+class ParticlePebble {
 public:
   static void begin(uint8_t *buffer, size_t length);
   static bool feed(size_t *length, bool *is_read);
