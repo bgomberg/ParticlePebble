@@ -197,10 +197,8 @@ static void do_update(void) {
     USART_InitStructure.USART_Parity = USART_Parity_Even;
   USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
 
-  if (tx_enabled)
-    USART_InitStructure.USART_Mode = USART_Mode_Tx;
-  else
-    USART_InitStructure.USART_Mode = USART_Mode_Rx;
+  USART_InitStructure.USART_Mode = USART_Mode_Tx;
+  USART_InitStructure.USART_Mode = USART_Mode_Rx;
 
   // Configure USART
   USART_Init(USART2, &USART_InitStructure);
@@ -214,12 +212,15 @@ static void do_update(void) {
 }
 #define BOARD_SERIAL Serial1
 static inline void board_set_tx_enabled(bool enabled) {
+  if (tx_enabled) {
+    return;
+  }
   tx_enabled = enabled;
   do_update();
 }
 static inline void board_set_even_parity(bool enabled) {
-  parity = enabled;
-  do_update();
+  //parity = enabled;
+  //do_update();
 }
 
 #endif // __BOARD_H__
