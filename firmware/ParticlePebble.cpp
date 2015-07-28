@@ -7,9 +7,7 @@
 #include <stddef.h>
 #include "ParticlePebble.h"
 #include "board.h"
-extern "C" {
 #include "PebbleSerial.h"
-};
 
 static USARTSerial *s_serial = &(BOARD_SERIAL);
 static uint8_t *s_buffer;

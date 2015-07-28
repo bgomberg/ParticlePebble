@@ -76,7 +76,7 @@ void USART_Init(USART_TypeDef* USARTx, USART_InitTypeDef* USART_InitStruct)
   apbclock = 120000000;
 
   /* Determine the integer part */
-  if ((USARTx->CR1 & USART_CR1_OVER8) != 0)
+  if ((USARTx->CR1 & (0x8000)) != 0)
   {
     /* Integer part computing in case Oversampling mode is 8 Samples */
     integerdivider = ((25 * apbclock) / (2 * (USART_InitStruct->USART_BaudRate)));
