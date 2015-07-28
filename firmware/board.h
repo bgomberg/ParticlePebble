@@ -20,6 +20,8 @@
 /*!< USART CR3 register clear Mask ((~(uint16_t)0xFCFF)) */
 #define CR3_CLEAR_MASK            ((uint16_t)(0xFCFF))
 
+#define IT_MASK                   ((uint16_t)0x001F)
+
 void USART_Init(USART_TypeDef* USARTx, USART_InitTypeDef* USART_InitStruct)
 {
   uint32_t tmpreg = 0x00, apbclock = 0x00;
