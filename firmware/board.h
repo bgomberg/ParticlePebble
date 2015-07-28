@@ -22,7 +22,9 @@
 
 void USART_Init(USART_TypeDef* USARTx, USART_InitTypeDef* USART_InitStruct)
 {
-  uint32_t tmpreg = 0x00, apbclock;
+  uint32_t tmpreg = 0x00, apbclock = 0x00;
+  uint32_t integerdivider = 0x00;
+  uint32_t fractionaldivider = 0x00;
 
 /*---------------------------- USART CR2 Configuration -----------------------*/
   tmpreg = USARTx->CR2;
@@ -68,7 +70,6 @@ void USART_Init(USART_TypeDef* USARTx, USART_InitTypeDef* USART_InitStruct)
 
   /*---------------------------- USART BRR Configuration -----------------------*/
   /* Configure the USART Baud Rate */
-  RCC_GetClocksFreq(&RCC_ClocksStatus);
 
   apbclock = 120000000;
 
