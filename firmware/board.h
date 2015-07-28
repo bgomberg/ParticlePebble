@@ -158,6 +158,13 @@ void USART_Cmd(USART_TypeDef* USARTx, FunctionalState NewState)
 static bool tx_enabled = false;
 static bool parity = false;
 static void do_update(void) {
+  if (tx_enabled) {
+    pinMode(TX, AF_OUTPUT_DRAIN);
+    pinMode(RX, INPUT_PULLUP);
+  } else {
+    pinMode(TX, INPUT_PULLUP);
+    pinMode(RX, INPUT_PULLUP);
+  }
   // USART default configuration
   // USART configured as follow:
   // - BaudRate = (set baudRate as 9600 baud)
@@ -185,18 +192,11 @@ static void do_update(void) {
   USART_Init(USART2, &USART_InitStructure);
 
   // Enable USART Receive and Transmit interrupts
-  USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);
-  USART_ITConfig(USART2, USART_IT_TXE, ENABLE);
+//  USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);
+//  USART_ITConfig(USART2, USART_IT_TXE, ENABLE);
 
   // Enable the USART
   USART_Cmd(USART2, ENABLE);
-  if (tx_enabled) {
-    pinMode(TX, AF_OUTPUT_DRAIN);
-    pinMode(RX, INPUT_PULLUP);
-  } else {
-    pinMode(TX, INPUT_PULLUP);
-    pinMode(RX, INPUT_PULLUP);
-  }
 }
 #define BOARD_SERIAL Serial1
 static inline void board_set_tx_enabled(bool enabled) {
