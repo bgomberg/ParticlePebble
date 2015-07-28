@@ -62,6 +62,7 @@ void ParticlePebble::begin(uint8_t *buffer, size_t length) {
 }
 
 bool ParticlePebble::feed(size_t *length, bool *is_read) {
+#if 0
   while (s_serial->available()) {
     uint8_t data = (uint8_t)s_serial->read();
     if (pebble_handle_byte(data, length, is_read)) {
@@ -70,6 +71,7 @@ bool ParticlePebble::feed(size_t *length, bool *is_read) {
       return true;
     }
   }
+#endif
   return false;
 }
 
