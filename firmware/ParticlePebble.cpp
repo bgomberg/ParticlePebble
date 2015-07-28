@@ -195,7 +195,7 @@ static void prv_write_internal(PebbleProtocol protocol, const uint8_t *data, siz
 }
 
 static void prv_handle_link_control(uint8_t *buffer) {
-  LinkControlType type = buffer[0];
+  LinkControlType type = (LinkControlType) buffer[0];
   if (type == LinkControlConnectionRequest) {
     uint8_t version = buffer[1];
     if (version == LINK_CONTROL_VERSION) {
