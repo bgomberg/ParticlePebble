@@ -49,7 +49,7 @@ static PebbleCallbacks s_callbacks;
 static bool s_connected;
 static bool s_can_respond;
 
-void pebble_init(PebbleCallbacks callbacks) {
+extern "C" void pebble_init(PebbleCallbacks callbacks) {
   s_callbacks = callbacks;
   s_callbacks.control(PebbleControlSetParityNone);
   s_callbacks.control(PebbleControlEnableTX);
