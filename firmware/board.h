@@ -8,7 +8,8 @@
 
 #include "application.h"
 #include <stdint.h>
-#include "stm32f10x_usart.h"
+#include "hw_config.h"
+#include "platform_config.h"
 
 static bool tx_enabled = false;
 static bool parity = false;
