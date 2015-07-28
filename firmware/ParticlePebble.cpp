@@ -36,7 +36,6 @@ static void prv_control_cb(PebbleControl cmd) {
   default:
     break;
   }
-#endif
 }
 
 static void prv_write_byte_cb(uint8_t data) {
