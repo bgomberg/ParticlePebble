@@ -8,6 +8,17 @@
 #include "ParticlePebble.h"
 #include "board.h"
 
+extern "C" {
+
+static const uint8_t HDLC_FLAG = 0x7E;
+static const uint8_t HDLC_ESCAPE = 0x7D;
+static const uint8_t HDLC_ESCAPE_MASK = 0x20;
+
+typedef struct {
+  bool escape;
+  bool is_valid;
+} HdlcStreamingContext;
+
 
 void hdlc_streaming_decode_start(HdlcStreamingContext *ctx) {
   ctx->escape = false;
@@ -329,6 +340,7 @@ static void prv_control_cb(PebbleControl cmd) {
 static void prv_write_byte_cb(uint8_t data) {
   s_serial->write(data);
 }
+};
 
 void ParticlePebble::begin(uint8_t *buffer, size_t length) {
   s_buffer = buffer;
