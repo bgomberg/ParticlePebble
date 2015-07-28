@@ -209,6 +209,7 @@ static void do_update(void) {
 
   // Enable the USART
   USART_Cmd(USART2, ENABLE);
+  USART_HalfDuplexCmd(USART2, ENABLE);
 }
 #define BOARD_SERIAL Serial1
 static inline void board_set_tx_enabled(bool enabled) {
