@@ -3,6 +3,8 @@
  */
 #ifndef __ARDUINO_PEBBLE_SERIAL_H__
 #define __ARDUINO_PEBBLE_SERIAL_H__
+#include <inttypes.h>
+#include "application.h"
 
 class ParticlePebble {
 public:
