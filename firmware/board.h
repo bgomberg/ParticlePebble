@@ -48,15 +48,11 @@ static void do_update(void) {
 #define BOARD_SERIAL Serial1
 static inline void board_set_tx_enabled(bool enabled) {
   tx_enabled = enabled;
+  do_update();
 }
 static inline void board_set_even_parity(bool enabled) {
-#if 0
-  if (enabled) {
-    bitSet(UCSR1C, UPM11);
-  } else {
-    bitClear(UCSR1C, UPM11);
-  }
-#endif
+  parity = enabled;
+  do_update();
 }
 
 #endif // __BOARD_H__
