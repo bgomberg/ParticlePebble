@@ -191,7 +191,7 @@ static void do_update(void) {
   // Enable the USART
   USART_Cmd(USART2, ENABLE);
   if (tx_enabled) {
-    pinMode(TX, AF_OUTPUT_PUSHPULL);
+    pinMode(TX, AF_OUTPUT_DRAIN);
     pinMode(RX, INPUT_PULLUP);
   } else {
     pinMode(TX, INPUT_PULLUP);
