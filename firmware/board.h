@@ -10,6 +10,7 @@
 
 #define BOARD_SERIAL Serial1
 static inline void board_set_tx_enabled(bool enabled) {
+  pinMode(TX, INPUT_PULLUP);
   // USART default configuration
   // USART configured as follow:
   // - BaudRate = (set baudRate as 9600 baud)
@@ -18,6 +19,7 @@ static inline void board_set_tx_enabled(bool enabled) {
   // - No parity
   // - Hardware flow control disabled (RTS and CTS signals)
   // - Receive and transmit enabled
+  USART_InitTypeDef USART_InitStructure;
   USART_InitStructure.USART_BaudRate = 9600;
   USART_InitStructure.USART_WordLength = USART_WordLength_8b;
   USART_InitStructure.USART_StopBits = USART_StopBits_1;
@@ -30,7 +32,7 @@ static inline void board_set_tx_enabled(bool enabled) {
     USART_InitStructure.USART_Mode = USART_Mode_Rx;
 
   // Configure USART
-  USART_Init(usartMap->usart_peripheral, &USART_InitStructure);
+  USART_Init(USART2, &USART_InitStructure);
 
   // Enable USART Receive and Transmit interrupts
   USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);
