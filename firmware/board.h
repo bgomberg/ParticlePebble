@@ -6,6 +6,7 @@
  * ArduinoPebbleSerial library.
  */
 
+#include "application.h"
 #include <stdint.h>
 
 static bool tx_enabled = false;
