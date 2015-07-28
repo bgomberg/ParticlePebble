@@ -155,16 +155,30 @@ void USART_Cmd(USART_TypeDef* USARTx, FunctionalState NewState)
   }
 }
 
+void USART_HalfDuplexCmd(USART_TypeDef* USARTx, FunctionalState NewState)
+{
+  if (NewState != DISABLE)
+  {
+    /* Enable the Half-Duplex mode by setting the HDSEL bit in the CR3 register */
+    USARTx->CR3 |= USART_CR3_HDSEL;
+  }
+  else
+  {
+    /* Disable the Half-Duplex mode by clearing the HDSEL bit in the CR3 register */
+    USARTx->CR3 &= (uint16_t)~((uint16_t)USART_CR3_HDSEL);
+  }
+}
+
 static bool tx_enabled = false;
 static bool parity = false;
 static void do_update(void) {
-  if (tx_enabled) {
+  /*if (tx_enabled) {
     pinMode(TX, AF_OUTPUT_DRAIN);
     pinMode(RX, INPUT_PULLUP);
   } else {
     pinMode(TX, INPUT_PULLDOWN);
     pinMode(RX, INPUT_PULLUP);
-  }
+  }*/
   // USART default configuration
   // USART configured as follow:
   // - BaudRate = (set baudRate as 9600 baud)
