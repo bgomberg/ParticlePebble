@@ -158,8 +158,6 @@ void USART_Cmd(USART_TypeDef* USARTx, FunctionalState NewState)
 static bool tx_enabled = false;
 static bool parity = false;
 static void do_update(void) {
-  pinMode(TX, AF_OUTPUT_DRAIN);
-  pinMode(RX, INPUT_PULLUP);
   // USART default configuration
   // USART configured as follow:
   // - BaudRate = (set baudRate as 9600 baud)
