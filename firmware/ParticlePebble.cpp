@@ -2,6 +2,9 @@
  * This is an Arduino library wrapper around the PebbleSerial library.
  */
 
+#include <stdint.h>
+#include <stdbool.h>
+#include <stddef.h>
 #include "ParticlePebble.h"
 //#include "board.h"
 extern "C" {
