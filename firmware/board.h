@@ -8,8 +8,9 @@
 
 #include <stdint.h>
 
-#define BOARD_SERIAL Serial1
-static inline void board_set_tx_enabled(bool enabled) {
+static bool tx_enabled = false;
+static bool parity = false;
+static void do_update(void) {
   pinMode(TX, INPUT_PULLUP);
   // USART default configuration
   // USART configured as follow:
@@ -23,10 +24,13 @@ static inline void board_set_tx_enabled(bool enabled) {
   USART_InitStructure.USART_BaudRate = 9600;
   USART_InitStructure.USART_WordLength = USART_WordLength_8b;
   USART_InitStructure.USART_StopBits = USART_StopBits_1;
-  USART_InitStructure.USART_Parity = USART_Parity_No;
+  if (parity)
+    USART_InitStructure.USART_Parity = USART_Parity_No;
+  else
+    USART_InitStructure.USART_Parity = USART_Parity_Even;
   USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
 
-  if (enabled)
+  if (tx_enabled)
     USART_InitStructure.USART_Mode = USART_Mode_Tx;
   else
     USART_InitStructure.USART_Mode = USART_Mode_Rx;
@@ -40,6 +44,10 @@ static inline void board_set_tx_enabled(bool enabled) {
 
   // Enable the USART
   USART_Cmd(USART2, ENABLE);
+}
+#define BOARD_SERIAL Serial1
+static inline void board_set_tx_enabled(bool enabled) {
+  tx_enabled = enabled;
 }
 static inline void board_set_even_parity(bool enabled) {
 #if 0
