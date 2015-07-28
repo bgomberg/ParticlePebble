@@ -22,7 +22,7 @@
 
 void USART_Init(USART_TypeDef* USARTx, USART_InitTypeDef* USART_InitStruct)
 {
-  uint32_t tmpreg = 0x00, apbclock = 0x00;
+  uint32_t tmpreg = 0x00, apbclock;
 
 /*---------------------------- USART CR2 Configuration -----------------------*/
   tmpreg = USARTx->CR2;
@@ -65,6 +65,91 @@ void USART_Init(USART_TypeDef* USARTx, USART_InitTypeDef* USART_InitStruct)
 
   /* Write to USART CR3 */
   USARTx->CR3 = (uint16_t)tmpreg;
+
+  /*---------------------------- USART BRR Configuration -----------------------*/
+  /* Configure the USART Baud Rate */
+  RCC_GetClocksFreq(&RCC_ClocksStatus);
+
+  apbclock = 120000000;
+
+  /* Determine the integer part */
+  if ((USARTx->CR1 & USART_CR1_OVER8) != 0)
+  {
+    /* Integer part computing in case Oversampling mode is 8 Samples */
+    integerdivider = ((25 * apbclock) / (2 * (USART_InitStruct->USART_BaudRate)));
+  }
+  else /* if ((USARTx->CR1 & USART_CR1_OVER8) == 0) */
+  {
+    /* Integer part computing in case Oversampling mode is 16 Samples */
+    integerdivider = ((25 * apbclock) / (4 * (USART_InitStruct->USART_BaudRate)));
+  }
+  tmpreg = (integerdivider / 100) << 4;
+
+  /* Determine the fractional part */
+  fractionaldivider = integerdivider - (100 * (tmpreg >> 4));
+
+  /* Implement the fractional part in the register */
+  if ((USARTx->CR1 & USART_CR1_OVER8) != 0)
+  {
+    tmpreg |= ((((fractionaldivider * 8) + 50) / 100)) & ((uint8_t)0x07);
+  }
+  else /* if ((USARTx->CR1 & USART_CR1_OVER8) == 0) */
+  {
+    tmpreg |= ((((fractionaldivider * 16) + 50) / 100)) & ((uint8_t)0x0F);
+  }
+
+  /* Write to USART BRR register */
+  USARTx->BRR = (uint16_t)tmpreg;
+}
+
+void USART_ITConfig(USART_TypeDef* USARTx, uint16_t USART_IT, FunctionalState NewState)
+{
+  uint32_t usartreg = 0x00, itpos = 0x00, itmask = 0x00;
+  uint32_t usartxbase = 0x00;
+
+  usartxbase = (uint32_t)USARTx;
+
+  /* Get the USART register index */
+  usartreg = (((uint8_t)USART_IT) >> 0x05);
+
+  /* Get the interrupt position */
+  itpos = USART_IT & IT_MASK;
+  itmask = (((uint32_t)0x01) << itpos);
+
+  if (usartreg == 0x01) /* The IT is in CR1 register */
+  {
+    usartxbase += 0x0C;
+  }
+  else if (usartreg == 0x02) /* The IT is in CR2 register */
+  {
+    usartxbase += 0x10;
+  }
+  else /* The IT is in CR3 register */
+  {
+    usartxbase += 0x14;
+  }
+  if (NewState != DISABLE)
+  {
+    *(__IO uint32_t*)usartxbase  |= itmask;
+  }
+  else
+  {
+    *(__IO uint32_t*)usartxbase &= ~itmask;
+  }
+}
+
+void USART_Cmd(USART_TypeDef* USARTx, FunctionalState NewState)
+{
+  if (NewState != DISABLE)
+  {
+    /* Enable the selected USART by setting the UE bit in the CR1 register */
+    USARTx->CR1 |= USART_CR1_UE;
+  }
+  else
+  {
+    /* Disable the selected USART by clearing the UE bit in the CR1 register */
+    USARTx->CR1 &= (uint16_t)~((uint16_t)0x2000);
+  }
 }
 
 static bool tx_enabled = false;
