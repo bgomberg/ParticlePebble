@@ -6,7 +6,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include "ParticlePebble.h"
-//#include "board.h"
+#include "board.h"
 extern "C" {
 #include "PebbleSerial.h"
 };
