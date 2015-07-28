@@ -10,6 +10,27 @@
 
 extern "C" {
 
+#define PEBBLE_DEFAULT_BAUDRATE 9600
+#define PEBBLE_PROTOCOL_VERSION 1
+#define PEBBLE_MAX_PAYLOAD      80
+
+typedef enum {
+  PebbleControlEnableTX,
+  PebbleControlDisableTX,
+  PebbleControlFlushTX,
+  PebbleControlSetParityEven,
+  PebbleControlSetParityNone
+} PebbleControl;
+
+typedef void (*PebbleWriteByteCallback)(uint8_t data);
+typedef void (*PebbleControlCallback)(PebbleControl cmd);
+
+typedef struct {
+  PebbleWriteByteCallback write_byte;
+  PebbleControlCallback control;
+} PebbleCallbacks;
+
+
 static const uint8_t HDLC_FLAG = 0x7E;
 static const uint8_t HDLC_ESCAPE = 0x7D;
 static const uint8_t HDLC_ESCAPE_MASK = 0x20;
