@@ -11,12 +11,11 @@ extern "C" {
 #include "PebbleSerial.h"
 };
 
-//static HardwareSerial *s_serial = &(BOARD_SERIAL);
+static USARTSerial *s_serial = &(BOARD_SERIAL);
 static uint8_t *s_buffer;
 static size_t s_buffer_length;
 
 static void prv_control_cb(PebbleControl cmd) {
-#if 0
   switch (cmd) {
   case PebbleControlEnableTX:
     board_set_tx_enabled(true);
@@ -41,15 +40,12 @@ static void prv_control_cb(PebbleControl cmd) {
 }
 
 static void prv_write_byte_cb(uint8_t data) {
-#if 0
   s_serial->write(data);
-#endif
 }
 
 void ParticlePebble::begin(uint8_t *buffer, size_t length) {
   s_buffer = buffer;
   s_buffer_length = length;
-#if 0
   s_serial->begin(PEBBLE_DEFAULT_BAUDRATE);
 
   PebbleCallbacks callbacks = {
@@ -58,11 +54,9 @@ void ParticlePebble::begin(uint8_t *buffer, size_t length) {
   };
   pebble_init(callbacks);
   pebble_prepare_for_read(s_buffer, s_buffer_length);
-#endif
 }
 
 bool ParticlePebble::feed(size_t *length, bool *is_read) {
-#if 0
   while (s_serial->available()) {
     uint8_t data = (uint8_t)s_serial->read();
     if (pebble_handle_byte(data, length, is_read)) {
@@ -71,7 +65,6 @@ bool ParticlePebble::feed(size_t *length, bool *is_read) {
       return true;
     }
   }
-#endif
   return false;
 }
 
