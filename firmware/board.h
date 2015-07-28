@@ -213,7 +213,7 @@ static void do_update(void) {
 }
 #define BOARD_SERIAL Serial1
 static inline void board_set_tx_enabled(bool enabled) {
-  if (tx_enabled) {
+  if (tx_enabled || !enabled) {
     return;
   }
   tx_enabled = enabled;
