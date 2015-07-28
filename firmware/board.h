@@ -12,15 +12,13 @@
 #include "platform_config.h"
 
 /*!< USART CR1 register clear Mask ((~(uint16_t)0xE9F3)) */
-#define CR1_CLEAR_MASK            ((uint16_t)(USART_CR1_M | USART_CR1_PCE | \
-                                              USART_CR1_PS | USART_CR1_TE | \
-                                              USART_CR1_RE))
+#define CR1_CLEAR_MASK            ((uint16_t)(0xE9F3))
 
 /*!< USART CR2 register clock bits clear Mask ((~(uint16_t)0xF0FF)) */
-#define CR2_CLOCK_CLEAR_MASK      ((uint16_t)(USART_CR2_CLKEN | USART_CR2_CPOL | \
-                                              USART_CR2_CPHA | USART_CR2_LBCL))
+#define CR2_CLOCK_CLEAR_MASK      ((uint16_t)(0xF0FF))
 
 /*!< USART CR3 register clear Mask ((~(uint16_t)0xFCFF)) */
+#define CR3_CLEAR_MASK            ((uint16_t)(0xFCFF))
 
 void USART_Init(USART_TypeDef* USARTx, USART_InitTypeDef* USART_InitStruct)
 {
