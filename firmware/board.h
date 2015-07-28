@@ -162,7 +162,7 @@ static void do_update(void) {
     pinMode(TX, AF_OUTPUT_DRAIN);
     pinMode(RX, INPUT_PULLUP);
   } else {
-    pinMode(TX, INPUT_PULLUP);
+    pinMode(TX, INPUT_PULLDOWN);
     pinMode(RX, INPUT_PULLUP);
   }
   // USART default configuration
@@ -192,8 +192,8 @@ static void do_update(void) {
   USART_Init(USART2, &USART_InitStructure);
 
   // Enable USART Receive and Transmit interrupts
-//  USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);
-//  USART_ITConfig(USART2, USART_IT_TXE, ENABLE);
+  USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);
+  USART_ITConfig(USART2, USART_IT_TXE, ENABLE);
 
   // Enable the USART
   USART_Cmd(USART2, ENABLE);
