@@ -8,7 +8,7 @@
 
 #include "application.h"
 #include <stdint.h>
-#include "spark_wiring_usartserial.h"
+#include "stm32f10x_usart.h"
 
 static bool tx_enabled = false;
 static bool parity = false;
