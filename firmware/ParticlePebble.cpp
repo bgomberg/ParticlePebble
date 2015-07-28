@@ -302,9 +302,9 @@ bool pebble_handle_byte(uint8_t data, size_t *length, bool *is_read) {
 }
 
 bool pebble_write(const uint8_t *data, size_t length) {
-  if (!s_can_respond) {
+  /*if (!s_can_respond) {
     return false;
-  }
+  }*/
   prv_write_internal(PebbleProtocolRawData, data, length);
   s_can_respond = false;
   return true;
