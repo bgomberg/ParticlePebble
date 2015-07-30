@@ -6,7 +6,8 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include "ParticlePebble.h"
-#include "board.h"
+
+#define BOARD_SERIAL Serial1
 
 extern "C" {
 
@@ -338,20 +339,18 @@ static size_t s_buffer_length;
 static void prv_control_cb(PebbleControl cmd) {
   switch (cmd) {
   case PebbleControlEnableTX:
-    board_set_tx_enabled(true);
     break;
   case PebbleControlDisableTX:
-    board_set_tx_enabled(false);
     break;
   case PebbleControlFlushTX:
     s_serial->flush();
     delay(1);
     break;
   case PebbleControlSetParityEven:
-    board_set_even_parity(true);
+    s_serial->begin(8640);
     break;
   case PebbleControlSetParityNone:
-    board_set_even_parity(false);
+    s_serial->begin(9600);
     break;
   default:
     break;
