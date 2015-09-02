@@ -75,11 +75,6 @@ typedef enum {
   PebbleControlSetParityNone
 } PebbleControl;
 
-typedef struct {
-  bool escape;
-  bool is_valid;
-} HdlcStreamingContext;
-
 typedef void (*PebbleWriteByteCallback)(uint8_t data);
 typedef void (*PebbleControlCallback)(PebbleControl cmd);
 
@@ -88,54 +83,55 @@ typedef struct {
   PebbleControlCallback control;
 } PebbleCallbacks;
 
+static const uint8_t ENCODING_FLAG = 0x7E;
+static const uint8_t ENCODING_ESCAPE = 0x7D;
+static const uint8_t ENCODING_ESCAPE_MASK = 0x20;
 
-static const uint8_t HDLC_FLAG = 0x7E;
-static const uint8_t HDLC_ESCAPE = 0x7D;
-static const uint8_t HDLC_ESCAPE_MASK = 0x20;
+typedef struct {
+  bool escape;
+} EncodingStreamingContext;
 
 
-void hdlc_streaming_decode_start(HdlcStreamingContext *ctx) {
+void encoding_streaming_decode_reset(EncodingStreamingContext *ctx) {
   ctx->escape = false;
-  ctx->is_valid = true;
 }
 
-bool hdlc_streaming_decode(HdlcStreamingContext *ctx, uint8_t *data) {
-  if (!ctx->is_valid) {
-    // if this stream is invalid, no need to process any more
-    return false;
-  }
-  if (*data == HDLC_FLAG) {
-    // there shouldn't be any flags in the data
-    ctx->is_valid = false;
-    return false;
-  } else if (*data == HDLC_ESCAPE) {
+bool encoding_streaming_decode(EncodingStreamingContext *ctx, uint8_t *data, bool *should_store,
+                           bool *encoding_error) {
+  bool is_complete = false;
+  *encoding_error = false;
+  *should_store = false;
+  if (*data == ENCODING_FLAG) {
+    if (ctx->escape) {
+      // extra escape character before flag
+      ctx->escape = false;
+      *encoding_error = true;
+    }
+    // we've reached the end of the frame
+    is_complete = true;
+  } else if (*data == ENCODING_ESCAPE) {
     if (ctx->escape) {
       // invalid sequence
-      ctx->is_valid = false;
-      return false;
+      ctx->escape = false;
+      *encoding_error = true;
     } else {
-      // next character must be escaped and this one should be ignored
+      // ignore this character and escape the next one
       ctx->escape = true;
-      return false;
     }
   } else {
-    // this is a valid character
     if (ctx->escape) {
-      // unescape the current character before processing it
-      *data ^= HDLC_ESCAPE_MASK;
+      *data ^= ENCODING_ESCAPE_MASK;
       ctx->escape = false;
     }
-    return true;
+    *should_store = true;
   }
+
+  return is_complete;
 }
 
-bool hdlc_streaming_decode_finish(HdlcStreamingContext *ctx) {
-  return ctx->is_valid && !ctx->escape;
-}
-
-bool hdlc_encode(uint8_t *data) {
-  if (*data == HDLC_FLAG || *data == HDLC_ESCAPE) {
-    *data ^= HDLC_ESCAPE_MASK;
+bool encoding_encode(uint8_t *data) {
+  if (*data == ENCODING_FLAG || *data == ENCODING_ESCAPE) {
+    *data ^= ENCODING_ESCAPE_MASK;
     return true;
   }
   return false;
@@ -226,7 +222,7 @@ typedef struct {
   bool should_drop;
   bool read_ready;
   bool is_read;
-  HdlcStreamingContext encoding_ctx;
+  EncodingStreamingContext encoding_ctx;
 } PebbleFrameInfo;
 
 typedef struct __attribute__((packed)) {
