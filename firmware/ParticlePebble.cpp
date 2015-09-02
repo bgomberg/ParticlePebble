@@ -275,11 +275,10 @@ void pebble_init(SmartstrapCallback callback, PebbleBaud baud, const uint16_t *s
 }
 
 void pebble_prepare_for_read(uint8_t *buffer, size_t length) {
-  s_frame = (PebbleFrameInfo) {
-    .payload = buffer,
-    .max_payload_length = length,
-    .read_ready = true
-  };
+  memset(&s_frame, 0, sizeof(s_frame));
+  s_frame.payload = buffer;
+  s_frame.max_payload_length = length;
+  s_frame.read_ready = true;
 }
 
 static void prv_send_flag(void) {
@@ -580,7 +579,7 @@ bool pebble_write(bool success, const uint8_t *buffer, uint16_t length) {
       .service_id = s_pending_response.service_id,
       .attribute_id = s_pending_response.attribute_id,
       .type = s_last_generic_service_type,
-      .error = success ? 0 : 1,
+      .error = (uint8_t) (success ? 0 : 1),
       .length = length
     };
     prv_write_internal(SmartstrapProfileGenericService, (uint8_t *)&frame, sizeof(frame), buffer,
