@@ -362,12 +362,12 @@ static bool prv_supports_generic_profile(void) {
 
 static void prv_handle_link_control(uint8_t *buffer) {
   // we will re-use the buffer for the response
-  LinkControlType type = buffer[1];
+  LinkControlType type = (LinkControlType) buffer[1];
   if (type == LinkControlTypeStatus) {
     if (s_current_baud != s_target_baud) {
-      buffer[2] = LinkControlStatusBaudRate;
+      buffer[2] = (uint8_t)LinkControlStatusBaudRate;
     } else {
-      buffer[2] = LinkControlStatusOk;
+      buffer[2] = (uint8_t)LinkControlStatusOk;
       s_connected = true;
     }
     prv_write_internal(SmartstrapProfileLinkControl, buffer, 3, NULL, 0, false);
@@ -375,10 +375,10 @@ static void prv_handle_link_control(uint8_t *buffer) {
     uint16_t profiles[2];
     uint8_t num_profiles = 0;
     if (prv_supports_raw_data_profile()) {
-      profiles[num_profiles++] = SmartstrapProfileRawData;
+      profiles[num_profiles++] = (uint8_t)SmartstrapProfileRawData;
     }
     if (prv_supports_generic_profile()) {
-      profiles[num_profiles++] = SmartstrapProfileGenericService;
+      profiles[num_profiles++] = (uint8_t)SmartstrapProfileGenericService;
     }
     prv_write_internal(SmartstrapProfileLinkControl, buffer, 2, (uint8_t *)profiles,
                        num_profiles * sizeof(uint16_t), false);
@@ -396,7 +396,7 @@ static bool prv_handle_generic_service(GenericServicePayload *data) {
 
   uint16_t service_id = data->service_id;
   uint16_t attribute_id = data->attribute_id;
-  s_last_generic_service_type = data->type;
+  s_last_generic_service_type = (SmartstrapRequestType) data->type;
   uint16_t length = data->length;
   if ((service_id == 0x0101) && (attribute_id == 0x0002)) {
     // notification info attribute
@@ -524,7 +524,7 @@ bool pebble_handle_byte(uint8_t data, uint16_t *service_id, uint16_t *attribute_
         *service_id = header.service_id;
         *attribute_id = header.attribute_id;
         *length = header.length;
-        *type = header.type;
+        *type = (SmartstrapRequestType) header.type;
       }
     } else {
       give_to_user = true;
@@ -625,7 +625,6 @@ bool pebble_is_connected(uint32_t time) {
 
 static uint8_t *s_buffer;
 static size_t s_buffer_length;
-static uint8_t s_pin;
 
 static void prv_cmd_cb(SmartstrapCmd cmd, uint32_t arg) {
   switch (cmd) {
