@@ -2,6 +2,7 @@
  * This is an Arduino library wrapper around the PebbleSerial library.
  */
 
+#include <string.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
@@ -614,7 +615,7 @@ bool pebble_is_connected(uint32_t time) {
   return s_connected;
 }
 
-
+}
 
 
 /*
