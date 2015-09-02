@@ -75,6 +75,11 @@ typedef enum {
   PebbleControlSetParityNone
 } PebbleControl;
 
+typedef struct {
+  bool escape;
+  bool is_valid;
+} HdlcStreamingContext;
+
 typedef void (*PebbleWriteByteCallback)(uint8_t data);
 typedef void (*PebbleControlCallback)(PebbleControl cmd);
 
@@ -212,11 +217,6 @@ typedef struct {
 } FrameHeader;
 
 typedef struct {
-  bool escape;
-  bool is_valid;
-} HdlcStreamingContext;
-
-typedef struct {
   FrameHeader header;
   uint8_t *payload;
   uint8_t checksum;
@@ -287,13 +287,13 @@ void pebble_prepare_for_read(uint8_t *buffer, size_t length) {
 }
 
 static void prv_send_flag(void) {
-  s_callback(SmartstrapCmdWriteByte, ENCODING_FLAG);
+  s_callback(SmartstrapCmdWriteByte, 0x7E);
 }
 
 static void prv_send_byte(uint8_t data, uint8_t *parity) {
   crc8_calculate_byte_streaming(data, parity);
   if (encoding_encode(&data)) {
-    s_callback(SmartstrapCmdWriteByte, ENCODING_ESCAPE);
+    s_callback(SmartstrapCmdWriteByte, 0x7E);
   }
   s_callback(SmartstrapCmdWriteByte, data);
 }
